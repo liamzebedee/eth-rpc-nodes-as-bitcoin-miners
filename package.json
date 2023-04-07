@@ -1,0 +1,30 @@
+{
+  "name": "eth-nodes-as-btc-miners",
+  "version": "1.0.0",
+  "description": "https://www.libevm.com/2023/01/03/abusing-eth-call/",
+  "main": "build/index.js",
+  "scripts": {
+    "start": "node build/index.js",
+    "watch": "tsc -W"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liamzebedee/eth-rpc-nodes-as-bitcoin-miners.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liamzebedee/eth-rpc-nodes-as-bitcoin-miners/issues"
+  },
+  "homepage": "https://github.com/liamzebedee/eth-rpc-nodes-as-bitcoin-miners#readme",
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "bitcoinjs-lib": "^6.1.0",
+    "ethers": "^5.7.2",
+    "node-fetch": "^2.6.9",
+    "solc": "^0.8.19"
+  }
+}
