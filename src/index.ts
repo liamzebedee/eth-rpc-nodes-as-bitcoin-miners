@@ -1,15 +1,11 @@
 import { compileSolidity } from './sol'
-
 import * as ethers from 'ethers'
-
 import { readFileSync } from 'fs'
 import * as fetch from 'node-fetch'
 const bcoin = require('../bcoin/lib/bcoin');
 
 
 // Decode the compact difficulty format
-// const difficultyCompact = 0x1db4d19b;
-
 function difficulty2bits(difficulty: number) {
     if (difficulty < 0) throw 'difficulty cannot be negative';
     if (!isFinite(difficulty)) throw 'difficulty cannot be infinite';
@@ -32,45 +28,36 @@ function difficulty2bits(difficulty: number) {
 }
 
 
+// See https://bitcoin.stackexchange.com/a/80974/1732 for an understanding of difficulty
+// There are 3 representations of the same thing (with varying degrees of precision) in Bitcoin:
+// bits - unsigned int 32 - bit
+// target - unsigned int 256 - bit
+// difficulty - double - precision float(64 - bit)
 async function getBitcoinData() {
-    const latestBlockUrl = 'https://blockchain.info/latestblock';
-    const latestBlockResponse = await fetch(latestBlockUrl);
+    const latestBlockResponse = await fetch('https://blockchain.info/latestblock');
     const latestBlockData = await latestBlockResponse.json();
+    const prevBlockHash = latestBlockData.hash;
     // console.log(latestBlockData)
 
-    const prevBlockHash = latestBlockData.hash;
-
     let diff = await (await fetch(`https://blockchain.info/q/getdifficulty`)).text()
-    diff = 10.0
     console.log('diff (float)', diff)
 
     // Decode the compact difficulty format
-    // console.log(parseFloat(diff))
     const diffBits = difficulty2bits(diff)
-    // const diffBits = 10
     console.log('diffBits', diffBits)
 
     const difficultyTarget = bcoin.mining.common.getTarget(diffBits);
     console.log('target', difficultyTarget)
 
     // Convert the target into a bytes32 format
-    // const difficultyBytes = difficultyTarget.toArrayLike(Buffer, 'be', 32);
     let targetBytes32 = '0x' + difficultyTarget.toString('hex');
     targetBytes32 = '0x' + '1'.repeat(63) + "0"
-
-    // console.log(difficultyBytes32);
-    
-    // console.log(blockChainInfoData)
-
-    // const difficulty = blockChainInfoData.difficulty;
 
     return {
         previousBlockHash: prevBlockHash,
         target: targetBytes32
     };
 }
-
-
 
 
 async function main() {
@@ -89,13 +76,10 @@ async function main() {
     const signer = ethers.Wallet.createRandom().connect(provider)
     const contract = new ethers.ContractFactory(Test_data.abi, Test_data.evm.bytecode.object, signer)
 
-    // Constructor args.
+    // Get the bitcoin mainnet data for mining.
     const btcMainnetData = await getBitcoinData()
-    // console.log(btcMainnetData)
-    // const prevBlockHash = ethers.utils.sha256('0x12')
-    // const timestamp = (+new Date() / 1000) | 0
-    // const target = '0x1f' + '0'.repeat(62)
 
+    // Build miner contract.
     const prevBlockHash = '0x' + btcMainnetData.previousBlockHash
     const timestamp = (+new Date() / 1000) | 0
     const target = btcMainnetData.target
@@ -120,8 +104,6 @@ async function main() {
     } else {
 
     }
-    
-
 }
 
 main()

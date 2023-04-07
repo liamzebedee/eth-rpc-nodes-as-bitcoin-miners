@@ -5,6 +5,8 @@ return ethereum to its joyous proof-of-work roots, by using the public Ethereum 
 
 by [abusing eth_call to execute arbitrary EVM code](https://www.libevm.com/2023/01/03/abusing-eth-call/), we are able to implement the bitcoin POW algorithm without changes to ethereum clients.
 
+12K hashes p/s using one Cloudflare RPC node.
+
 ## run
 
 ```sh

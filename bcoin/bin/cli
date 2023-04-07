@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+'use strict';
+
+console.error('%s%s',
+  'Warning: The `bcoin cli` interface is deprecated.\n',
+  'Please use `bcoin-cli` and `bwallet-cli` instead.');
