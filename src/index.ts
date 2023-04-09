@@ -101,8 +101,6 @@ async function main() {
     const zero = ethers.constants.Zero.toHexString()
     if(retDataE != zero) {
         console.log('pow solution found:', retDataE)
-    } else {
-
     }
 }
 
